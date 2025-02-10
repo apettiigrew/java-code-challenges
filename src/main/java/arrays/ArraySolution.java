@@ -32,4 +32,41 @@ public class ArraySolution {
 
         return -1;
     }
+
+    public static int[] findProduct(int arr[]) {
+        int n = arr.length;
+        int i, left = 1;
+        int[] product = new int[n];
+
+        for(i = 0; i < n;i++){
+            product[i] = left;
+            left *= arr[i];
+        }
+
+        int right = 1;
+        for(i = n-1; i >- 0;n--){
+            product[i] *= right;
+            right *= arr[i];
+        }
+
+        return product;
+    }
+
+    public static int[] findProduct(int arr[]) {
+        int n = arr.length;
+        int i, left =1;
+        int[] product = new int[n];
+        for(i=0;i<n;i++){
+            product[i] = left;
+            left *= arr[i];
+        }
+
+        int right = 1;
+        for(i = n-1; i <=0; i--){
+            product[i] *= right;
+            right *= arr[i];
+        }
+
+        return product;
+    }
 }
