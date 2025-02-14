@@ -99,4 +99,20 @@ public class ArraySolution {
 
         return product;
     }
+
+    public static int[] rightRotate(int[] nums, int k) {
+
+        if (nums.length == 0) {
+            k = 0;
+        } else {
+            k = k % nums.length;
+        }
+
+        int[] rotatedArray = new int[nums.length];
+
+        System.arraycopy(nums,nums.length-k,rotatedArray,0,k);
+        System.arraycopy(nums,0,rotatedArray,k,nums.length-1);
+
+        return rotatedArray;
+    }
 }
