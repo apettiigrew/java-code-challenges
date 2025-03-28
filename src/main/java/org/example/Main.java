@@ -2,63 +2,79 @@ package org.example;
 
 import arrays.ArraySolution;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
 public class Main {
     public static void main(String[] args) {
-        int[] numbers = {3,2,4};
-        System.out.println(Arrays.toString(twoSum(numbers,6)));
-
-        List<String> lines = new ArrayList<>();
-        lines.add("2");
-        lines.add("5 5");
-        lines.add("5 1");
-        System.out.println(aPlusB(lines));
+        int[] numbers = {3, 2};
+        var result = hasDuplicate(numbers);
+        System.out.println(isAnagram("racecar","carrace"));
+        System.out.println(isAnagram("car","rat"));
+        System.out.println(isAnagram("card ", "dacr"));
     }
 
-    public static int[] twoSum(int[] nums, int target) {
-        int a = 0;
-        int b = 1;
-        while(a < nums.length && b < nums.length){
-            int itemA = nums[a];
-            int itemB = nums[b];
-            int testSum = itemA + itemB;
+    public static boolean hasDuplicate(int[] nums) {
+        List<Integer> seen = new ArrayList<>();
 
-            if(testSum == target){
-                return new int[]{a,b};
+        for (int i = 0; i < nums.length; i++) {
+            if (seen.contains(nums[i])) {
+                return true;
             }
-
-            if(b<nums.length-1){
-                b++;
-            } else if(a<nums.length-1){
-                a++;
-            }
-
+            seen.add(nums[i]);
         }
 
-        return null;
+        return false;
     }
 
-
-    public static List<String> aPlusB(List<String> lines) {
-        // Get the first item to indicate the number of lines to iterator over
-        int numAdditions = Integer.parseInt(lines.get(0));
-
-        List<Integer> savedResult = new ArrayList<>();
-        for(int i = 1 ; i <= numAdditions;i++){
-            String nums = lines.get(i);
-            String[] items = nums.split(" ");
-            int sum = Integer.parseInt(items[0]) + Integer.parseInt(items[1]);
-            savedResult.add(sum);
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (var i = 0; i < nums.length; i++) {
+            Integer index = map.get(nums[i]);
+            if (index != null) {
+                return new int[]{i, index};
+            }
+            map.put(target - nums[i], i);
         }
 
-        return savedResult.stream().map(i-> i.toString()).collect(toList());
+        return nums;
     }
 
+    public static boolean isAnagram(String s, String t) {
+        Map<Character, Integer> sMap = new HashMap<>();
+        for (var i = 0; i < s.length(); i++) {
+            char letter = s.charAt(i);
+            if (!sMap.containsKey(letter)) {
+                sMap.put(letter, 1);
+            } else {
+                int occurrence = sMap.get(letter);
+                sMap.put(letter, occurrence + 1);
+            }
+        }
 
+        Map<Character, Integer> tMap = new HashMap<>();
+        for (var j = 0; j < t.length(); j++) {
+            char tLetter = t.charAt(j);
+            if(sMap.containsKey(tLetter)){
+                Integer sCount = sMap.get(tLetter);
+                Integer tCount = tMap.get(tLetter);
 
+                if(tCount == null || tCount <= sCount){
+                    if(tMap.containsKey(tLetter)){
+                        Integer occurrence = tMap.get(tLetter);
+                        tMap.put(tLetter, occurrence + 1);
+                    } else {
+                        tMap.put(tLetter, 1);
+                    }
+
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 }
