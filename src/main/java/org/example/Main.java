@@ -10,9 +10,8 @@ public class Main {
     public static void main(String[] args) {
         int[] numbers = {3, 2};
         var result = hasDuplicate(numbers);
-        System.out.println(isAnagram("racecar","carrace"));
-        System.out.println(isAnagram("car","rat"));
-        System.out.println(isAnagram("card ", "dacr"));
+
+        System.out.println(isAnagram("bbcc", "ccbc"));
     }
 
     public static boolean hasDuplicate(int[] nums) {
@@ -42,6 +41,10 @@ public class Main {
     }
 
     public static boolean isAnagram(String s, String t) {
+
+        if(s.length() != t.length())
+            return false;
+
         Map<Character, Integer> sMap = new HashMap<>();
         for (var i = 0; i < s.length(); i++) {
             char letter = s.charAt(i);
@@ -75,6 +78,17 @@ public class Main {
                 return false;
             }
         }
+
+        // loop over each Map to get the occurrence of each letter
+        for(Map.Entry<Character, Integer> entry: sMap.entrySet()){
+            Character letter = entry.getKey();
+            Integer sCount = entry.getValue();
+            Integer tcount = tMap.get(letter);
+            if(!sCount.equals(tcount)){
+                return false;
+            }
+        }
+
         return true;
     }
 }
