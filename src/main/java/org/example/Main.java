@@ -8,10 +8,14 @@ import static java.util.stream.Collectors.toList;
 
 public class Main {
     public static void main(String[] args) {
-        int[] numbers = {3, 2};
-        var result = hasDuplicate(numbers);
+        MinStack stack = new MinStack();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        System.out.println(stack.printStack());
+        stack.pop();
+        System.out.println(stack.printStack());
 
-        System.out.println(isAnagram("bbcc", "ccbc"));
     }
 
     public static boolean hasDuplicate(int[] nums) {
@@ -91,4 +95,30 @@ public class Main {
 
         return true;
     }
+
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer,Integer> freqMap = new HashMap<>();
+        for(var num: nums){
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+        }
+
+        List<Integer>[] buckets = new List[nums.length+1];
+
+        freqMap.forEach((num,freq) -> {
+            if(buckets[freq] == null) {
+                buckets[freq] = new ArrayList<>();
+                buckets[freq].add(num);
+            }
+        });
+
+        List<Integer> result = new ArrayList<>();
+        for(int i = buckets.length - 1; i > 0 && result.size() < k;i--){
+            if(buckets[i] != null){
+                result.addAll(buckets[i]);
+            }
+        }
+
+        return result.stream().mapToInt(i -> i).toArray();
+    }
+
 }
