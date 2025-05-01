@@ -4,13 +4,48 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        System.out.println(simplifyPath("/a/../../b/../c//.//"));
+    }
 
-        while(scanner.hasNext()){
-            int num = scanner.nextInt();
-            System.out.println(num);
+    public static String simplifyPath(String path) {
+
+        String[] tokens = path.split("/");
+        Stack<String> paths = new Stack<>();
+
+        for(int i = 0;i < tokens.length ;i++){
+            String item = tokens[i];
+            if(item.equals(""))
+                continue;
+
+            if(item.equals("..")){
+                if(!paths.isEmpty()){
+                    paths.pop();
+                    continue;
+                }
+                if(i == tokens.length-1){
+                    break;
+                } else {
+                    continue;
+                }
+            }
+
+            if(item.equals(".")){
+                continue;
+            }
+
+            paths.push(item);
         }
 
+        StringBuilder pathString = new StringBuilder();
+        for (int i = paths.size() - 1; i >= 0; i--) {
+            pathString.insert(0,"/"+paths.pop());
+        }
+
+        if(pathString.length() == 0){
+            pathString.append("/");
+        }
+
+        return pathString.toString();
     }
 
     public static boolean hasDuplicate(int[] nums) {
@@ -84,19 +119,61 @@ public class Main {
             var c = s.charAt(i);
             if (c == '(' || c == '[' || c == '{') {
                 stack.push(c);
-            } else  if(stack.isEmpty()) {
-                    return false;
-                } else if (c == ')' && stack.peek() == '('){
-                    stack.pop();
-                } else if (c == ']' && stack.peek() == '[') {
-                    stack.pop();
-                } else if (c == '}' && stack.peek() == '{') {
-                    stack.pop();
-                } else {
+            } else
+            if(stack.isEmpty()) {
+                return false;
+            } else if (c == ')' && stack.peek() == '('){
+                stack.pop();
+            } else if (c == ']' && stack.peek() == '[') {
+                stack.pop();
+            } else if (c == '}' && stack.peek() == '{') {
+                stack.pop();
+            } else {
                 return false;
             }
         }
+
         return stack.isEmpty();
+    }
+
+    public static int evalRPN(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for(var i = 0 ;i<tokens.length;i++){
+            String operand = tokens[i];
+            if(!isOperator(operand)){
+                stack.push(Integer.parseInt(operand));
+            } else {
+                System.out.println(stack.elementAt(stack.size()));
+                if(operand.equals("+")) {
+                    var num1 = stack.pop();
+                    var num2 = stack.pop();
+                    stack.push(num1+num2);
+                } else  if(operand.equals("-")) {
+                    var num1 = stack.pop();
+                    var num2 = stack.pop();
+                    stack.push(num1-num2);
+
+                } else  if(operand.equals("*")) {
+                    var num1 = stack.pop();
+                    var num2 = stack.pop();
+                    stack.push(num1 * num2);
+                } else if(operand.equals("/")) {
+                    var num1 = stack.pop();
+                    var num2 = stack.pop();
+                    stack.push(num1 / num2);
+                }
+            }
+        }
+
+        return stack.pop();
+    }
+
+
+    public static boolean isOperator(String operator){
+        if (operator.equals("+") || operator.equals("-") || operator.equals("/") || operator.equals("*")){
+            return true;
+        }
+        return false;
     }
 
     public int[] twoSum(int[] nums, int target) {
